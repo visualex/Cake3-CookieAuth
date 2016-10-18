@@ -12,6 +12,19 @@ class CookieAuthenticate extends BaseAuthenticate
 {
 
     /**
+     * Default configuration.
+     * fields: username & password Form field names
+     * cookieName: the name of the cookie for saving credentials
+     */
+    protected $_defaultConfig = [
+       'fields' => [
+          'username' => 'username',
+          'password' => 'password'
+       ],
+       'cookieName' => 'CookieAuth',
+    ];
+
+    /**
      * Constructor.
      *
      * @param \Cake\Controller\ComponentRegistry $registry The Component registry used on this request.
@@ -39,7 +52,7 @@ class CookieAuthenticate extends BaseAuthenticate
             throw new \RuntimeException('You need to load the CookieComponent.');
         }
 
-        $cookies = $this->_registry->Cookie->read('CookieAuth');
+        $cookies = $this->_registry->Cookie->read($this->_config['cookieName']);
         if (empty($cookies)) {
             return false;
         }
@@ -79,6 +92,6 @@ class CookieAuthenticate extends BaseAuthenticate
      */
     public function logout(Event $event, array $user)
     {
-        $this->_registry->Cookie->delete('CookieAuth');
+        $this->_registry->Cookie->delete($this->_config['cookieName']);
     }
 }
